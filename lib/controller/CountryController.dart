@@ -1,23 +1,34 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:tatsam/enum/NetworkState.dart';
 import 'package:tatsam/model/country_data.dart';
 import 'package:tatsam/model/country_response.dart';
 import 'package:tatsam/network/base_api.dart';
+import 'package:tatsam/utils/Constants.dart';
+import 'package:tatsam/utils/SharedPreferenceUtil.dart';
 import 'package:tatsam/utils/util.dart';
 
 class CountryController extends GetxController {
   int offset = 0;
   int limit = 30;
   List<CountryData> countryList = [];
+  List<CountryData> favCountryList = [];
   double lastStoredScrollPixel = 0.0;
   int maxElements = 250;
   bool isDataFetched = false;
   String errorMessage;
 
+  Map<String, dynamic> favCountryMap = {};
+
   Future<STATE> getCountryList() async {
     try {
       if (!isDataFetched) {
+        String storedData = await SharedPreferencesUtil().getString(favourites);
+        if (storedData != null && storedData.isNotEmpty) {
+          favCountryMap = jsonDecode(storedData);
+        }
         if (await Utility.isInternetConnected()) {
           CountryResponse response = await fetchListFromServer();
           isDataFetched = true;
@@ -49,6 +60,11 @@ class CountryController extends GetxController {
     //serialize the data
 
     final CountryResponse countryResponse = CountryResponse.fromJson(response);
+    countryResponse.data.forEach((element) {
+      if (favCountryMap.isNotEmpty && favCountryMap.containsKey(element.countryCode)) {
+        element.isFav = true;
+      }
+    });
     return countryResponse;
   }
 
@@ -71,5 +87,28 @@ class CountryController extends GetxController {
       countryList.addAll(response.data);
     }
     update();
+  }
+
+  Future<void> addCountryToFavList(CountryData data) async {
+    try {
+      data.isFav = !data.isFav;
+      if (!data.isFav) {
+        favCountryMap.remove(data.countryCode);
+      } else {
+        favCountryMap[data.countryCode] = data.toJson();
+      }
+      String x = jsonEncode(favCountryMap);
+      await SharedPreferencesUtil().setString(favourites, x);
+      update();
+    } catch (error) {
+      return;
+    }
+  }
+
+  getFavCountryList() {
+    favCountryList = countryList.where((element) {
+      return element.isFav;
+    }).toList();
+    return favCountryList;
   }
 }

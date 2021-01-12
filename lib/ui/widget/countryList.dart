@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tatsam/controller/CountryController.dart';
+import 'package:tatsam/utils/util.dart';
 
 class CountryList extends StatelessWidget {
-  List<Color> colorList = [
-    Colors.red,
-    Colors.pink,
-    Colors.blue,
-    Colors.deepPurple,
-    Colors.deepOrange,
-    Colors.pink,
-    Colors.green,
-    Colors.indigo,
-    // Colors.lightGreenAccent,
-    Colors.lightBlue,
-    Colors.orange
-  ];
+  int itemCount;
+  bool hideFavorites;
+
+  CountryList({this.itemCount, this.hideFavorites = false});
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +16,16 @@ class CountryList extends StatelessWidget {
       builder: (CountryController instance) {
         return ListView.builder(
             key: PageStorageKey<String>('controllerD'),
-            itemCount: instance.maxElements > instance.countryList.length
-                ? instance.countryList.length + 1
-                : instance.countryList.length,
+            itemCount: itemCount != null && itemCount != 0
+                ? itemCount
+                : instance.maxElements > instance.countryList.length
+                    ? instance.countryList.length + 1
+                    : instance.countryList.length,
             itemBuilder: (context, index) {
-              if (index == instance.countryList.length) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
+              if (index == instance.countryList.length && !hideFavorites) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
               } else {
                 return Card(
                   elevation: 5.0,
@@ -48,10 +42,12 @@ class CountryList extends StatelessWidget {
                           decoration: BoxDecoration(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(50.0)),
-                              color: colorList[index % 10]),
+                              color: Utility.colorList[index % 10]),
                           child: Center(
                             child: Text(
-                              instance.countryList[index].countryCode,
+                              hideFavorites
+                                  ? instance.favCountryList[index].countryCode
+                                  : instance.countryList[index].countryCode,
                               style: TextStyle(
                                   fontSize: 20.0, fontWeight: FontWeight.bold),
                             ),
@@ -69,7 +65,9 @@ class CountryList extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    instance.countryList[index].country,
+                                    hideFavorites
+                                        ? instance.favCountryList[index].country
+                                        : instance.countryList[index].country,
                                     style: TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold),
@@ -77,25 +75,29 @@ class CountryList extends StatelessWidget {
                                   SizedBox(
                                     height: 5.0,
                                   ),
-                                  Text(instance.countryList[index].region),
+                                  Text(hideFavorites
+                                      ? instance.favCountryList[index].region
+                                      : instance.countryList[index].region),
                                 ],
                               ),
                             )),
                         SizedBox(
                           width: 20.0,
                         ),
-                        IconButton(
-                          icon: Icon(
-                            instance.countryList[index].isFav
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color: Colors.pink.withOpacity(0.7),
-                          ),
-                          onPressed: () async {
-                            // instance.addtoFav(
-                            //     instance.countryList[index]);
-                          },
-                        )
+                        hideFavorites
+                            ? Container()
+                            : IconButton(
+                                icon: Icon(
+                                  instance.countryList[index].isFav
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: Colors.pink.withOpacity(0.7),
+                                ),
+                                onPressed: () async {
+                                  instance.addCountryToFavList(
+                                      instance.countryList[index]);
+                                },
+                              )
                       ],
                     ),
                   ),

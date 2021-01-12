@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tatsam/controller/CountryController.dart';
 import 'package:tatsam/enum/NetworkState.dart';
+import 'package:tatsam/ui/fav_page.dart';
 import 'package:tatsam/ui/widget/countryList.dart';
 
 class CountryDetails extends StatelessWidget {
@@ -38,7 +39,7 @@ class CountryDetails extends StatelessWidget {
                       color: Colors.pink.withOpacity(0.7),
                     ),
                     onPressed: () {
-                      // Get.to(FavouritePage());
+                      Get.to(FavouritePage());
                     }),
               )
             ],
