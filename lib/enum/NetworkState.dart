@@ -1,0 +1,5 @@
+enum STATE {
+    SUCCESS,
+    FAILURE,
+    INTERNET_NOT_CONNECTED
+}
