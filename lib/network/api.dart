@@ -5,9 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:tatsam/utils/Constants.dart';
 
-const String APP_VERSION_HEADER_KEY = 'x-app-version';
-const String APP_VERSION_UPDATE_HEADER_KEY = 'x-update-app-version';
-
 class ApiClient {
   factory ApiClient() {
     return _instance;
@@ -20,17 +17,12 @@ class ApiClient {
   //get it from shared preferences
   final String _apiBaseUrl = baseUrl;
 
-  Map<String, String> _getRequestHeaderContentTypeOnly() {
-    return <String, String>{'Content-Type': 'application/json'};
-  }
-
   Future<Map<String, dynamic>> get(String endPoint,
       {bool withoutHeaders = false, Map<String, dynamic> queryParams}) async {
-    debugPrint('endPoint:$endPoint');
     http.Response response;
-
     dynamic url;
-    //when query params are to be passed in GET request
+
+    //when query params are passed in GET request
     if (queryParams != null) {
       String queryString = Uri(queryParameters: queryParams).query;
       url = _apiBaseUrl + endPoint + '?' + queryString;

@@ -1,4 +1,4 @@
-import 'package:tatsam/model/BaseResponse.dart';
+import 'package:tatsam/model/base_response.dart';
 import 'package:tatsam/model/country_data.dart';
 
 class CountryResponse extends BaseResponse {

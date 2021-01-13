@@ -16,7 +16,6 @@ class Utility {
     Colors.pink,
     Colors.green,
     Colors.indigo,
-    // Colors.lightGreenAccent,
     Colors.lightBlue,
     Colors.orange
   ];

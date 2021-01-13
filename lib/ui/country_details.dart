@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tatsam/controller/CountryController.dart';
+import 'package:tatsam/controller/country_controller.dart';
 import 'package:tatsam/enum/NetworkState.dart';
 import 'package:tatsam/ui/fav_page.dart';
 import 'package:tatsam/ui/widget/countryList.dart';
@@ -32,7 +32,7 @@ class CountryDetails extends StatelessWidget {
             centerTitle: true,
             actions: [
               Container(
-                margin: EdgeInsets.only(right: 15.0),
+                margin: EdgeInsets.only(right: 5.0),
                 child: IconButton(
                     icon: Icon(
                       Icons.favorite,
@@ -48,25 +48,20 @@ class CountryDetails extends StatelessWidget {
             future: instance.getCountryList(),
             builder: (BuildContext context, AsyncSnapshot<STATE> snapshot) {
               if (snapshot.hasData) {
-                if (snapshot.data == STATE.INTERNET_NOT_CONNECTED || snapshot.data == STATE.FAILURE) {
-                  return Center(
-                    child: Text(instance.errorMessage),
-                  );
+                if (snapshot.data == STATE.INTERNET_NOT_CONNECTED ||
+                    snapshot.data == STATE.FAILURE) {
+                  return Center(child: Text(instance.errorMessage));
                 } else {
                   return NotificationListener<ScrollNotification>(
-                    onNotification: (notification) =>
-                        instance.isNeedToFetchNextBatch(notification),
-                    child: Container(
-                      margin:
-                          EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
-                      child: CountryList(),
-                    ),
-                  );
+                      onNotification: (notification) =>
+                          instance.isNeedToFetchNextBatch(notification),
+                      child: Container(
+                          padding:
+                              EdgeInsets.only(top: 10.0, left: 5.0, right: 5.0),
+                          child: CountryList()));
                 }
               } else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+                return Center(child: CircularProgressIndicator());
               }
             },
           ), // This trailing comma makes auto-formatting nicer for build methods.

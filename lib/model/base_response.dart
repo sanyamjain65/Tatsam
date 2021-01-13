@@ -1,5 +1,7 @@
 class BaseResponse {
-
+    bool success;
+    int statusCode;
+    String message;
 
     BaseResponse();
 
@@ -7,7 +9,4 @@ class BaseResponse {
         statusCode = json['status-code'];
         message = json['message'] ?? message;
     }
-    bool success;
-    int statusCode;
-    String message;
 }
