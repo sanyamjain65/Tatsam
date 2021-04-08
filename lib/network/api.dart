@@ -10,6 +10,7 @@ class ApiClient {
     return _instance;
   }
 
+
   ApiClient._internal();
 
   static final ApiClient _instance = ApiClient._internal();
