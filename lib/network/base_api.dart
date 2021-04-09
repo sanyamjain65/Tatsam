@@ -8,6 +8,7 @@ class BaseApi {
     client = ApiClient();
   }
 
+
   ApiClient client;
 
   String url;
