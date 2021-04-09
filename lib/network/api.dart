@@ -10,19 +10,12 @@ class ApiClient {
     return _instance;
   }
 
-  int x = 0;
-  int y = 0;
-  int z = 0;
-
-
-
   ApiClient._internal();
 
   static final ApiClient _instance = ApiClient._internal();
 
   //get it from shared preferences
   final String _apiBaseUrl = baseUrl;
-
 
   Future<Map<String, dynamic>> get(String endPoint,
       {bool withoutHeaders = false, Map<String, dynamic> queryParams}) async {
