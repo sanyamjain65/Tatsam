@@ -10,10 +10,6 @@ class ApiClient {
     return _instance;
   }
 
-  int x = 0;
-  int y = 0;
-  int z = 0;
-
 
 
   ApiClient._internal();
